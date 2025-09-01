@@ -41,15 +41,22 @@ add_subdirectory(cmake/stm32cubemx)
 target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined library search paths
 )
-
+set(microros
+        ${PROJECT_SOURCE_DIR}/Lib_Microros/extra_sources/custom_memory_manager.c
+        ${PROJECT_SOURCE_DIR}/Lib_Microros/extra_sources/microros_allocators.c
+        ${PROJECT_SOURCE_DIR}/Lib_Microros/extra_sources/microros_time.c
+        ${PROJECT_SOURCE_DIR}/Lib_Microros/extra_sources/microros_transports/usb_cdc_transport.c
+)
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
+   ${microros}
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
+    ${PROJECT_SOURCE_DIR}/Lib_Microros/include
 )
 
 # Add project symbols (macros)
@@ -60,9 +67,10 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
 # Remove wrong libob.a library dependency when using cpp files
 list(REMOVE_ITEM CMAKE_C_IMPLICIT_LINK_LIBRARIES ob)
 
+set(THIRD_PARTY_LIB "${PROJECT_SOURCE_DIR}/Lib_Microros/libmicroros.a")
 # Add linked libraries
 target_link_libraries(${CMAKE_PROJECT_NAME}
     stm32cubemx
-
+    ${THIRD_PARTY_LIB}
     # Add user defined libraries
 )
